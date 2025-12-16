@@ -91,7 +91,25 @@ class NotificationScreen extends StatelessWidget {
                 ),
               )
             : null,
-        onTap: () {},
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(index % 2 == 0 ? 'Detail Tugas' : 'Detail Pengumuman'),
+              content: Text(
+                index % 2 == 0 
+                ? 'Ini adalah detail dari Tugas Baru: Pemrograman Mobile. Silakan kerjakan sebelum tenggat waktu.'
+                : 'Ini adalah detail pengumuman Jadwal Ujian. Pastikan Anda mencatat tanggal penting.'
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Tutup'),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
