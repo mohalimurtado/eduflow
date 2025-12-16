@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
-import 'home_screen.dart'; // Placeholder for next step
+import 'main_navigation.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   fontWeight: FontWeight.bold,
                   color: AppColors.textPrimary,
                 ),
-                textAlign: Center,
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: AppColors.textSecondary,
                 ),
-                textAlign: Center,
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),
 
@@ -109,10 +109,10 @@ class _LoginScreenState extends State<LoginScreen> {
               ElevatedButton(
                 onPressed: () {
                   // TODO: Implement actual login logic
-                  // For now, navigate to Home
+                  // For now, navigate to MainNavigation
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    MaterialPageRoute(builder: (context) => const MainNavigation()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
