@@ -38,14 +38,14 @@ class _MainNavigationState extends State<MainNavigation> {
       body: _screens[_selectedIndex],
       // Floating Bottom Nav with fixed height as per design
       bottomNavigationBar: SizedBox(
-        height: 80, // Slightly taller than 56 to allow for the curve effect if present, effectively 56 for the bar content
+        height: 56, // Exact 56px as requested
         child: Stack(
           alignment: Alignment.bottomCenter,
           children: [
             // Background Image
             Container(
               width: double.infinity,
-              height: 80, // Matching container
+              height: 56, // Matching container
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/bottom_nav_bg.png'),

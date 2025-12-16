@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import 'course/course_detail_screen.dart';
+import 'my_classes_screen.dart'; // Added import
 import 'profile/profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -104,7 +105,12 @@ class HomeScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MyClassesScreen()),
+                      );
+                    },
                     child: const Text('Lihat Semua'),
                   ),
                 ],
