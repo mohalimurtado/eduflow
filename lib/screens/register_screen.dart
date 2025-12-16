@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import 'main_navigation.dart';
 
+import '../services/auth_service.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -14,8 +16,64 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final AuthService _authService = AuthService();
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
+  bool _isLoading = false;
+
+  void _register() async {
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
+
+    if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Semua field harus diisi')),
+      );
+      return;
+    }
+
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password tidak cocok')),
+      );
+      return;
+    }
+
+    if (password.length < 6) {
+       ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password minimal 6 karakter')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await _authService.signUp(email: email, password: password, name: name);
+      if (mounted) {
+         Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainNavigation()),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal Mendaftar: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -211,14 +269,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 30),
 
                   // Register Button
-                  ElevatedButton(
-                    onPressed: () {
-                      // Navigate to Main Navigation (Simulate registration)
-                       Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => const MainNavigation()),
-                      );
-                    },
+                  _isLoading
+                  ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
+                  : ElevatedButton(
+                    onPressed: _register,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,

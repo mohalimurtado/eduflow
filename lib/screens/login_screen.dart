@@ -3,6 +3,8 @@ import '../theme/app_colors.dart';
 import 'main_navigation.dart';
 import 'register_screen.dart';
 
+import '../services/auth_service.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -13,7 +15,47 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
+
+  void _login() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email dan Password harus diisi')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await _authService.signIn(email: email, password: password);
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainNavigation()),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal Login: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +95,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     alignment: Alignment.center,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 40),
-                      child: Image.asset(
-                        'assets/images/login_logo.png', // Updated simple logo
-                        width: 100, // Adjusted size for the icon
+                      child: Stack(
+                        alignment: Alignment.center, // Center alignment for Stack
+                        children: [
+                          Image.asset(
+                            'assets/images/red_circle_bg.png', // Background Circle
+                             width: 140, // Slightly larger than the logo
+                             height: 140,
+                          ),
+                          Image.asset(
+                            'assets/images/login_logo.png', // Logo
+                            width: 100,
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -157,13 +209,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 20),
 
                   // Login Button
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => const MainNavigation()),
-                      );
-                    },
+                  _isLoading
+                  ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
+                  : ElevatedButton(
+                    onPressed: _login,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
