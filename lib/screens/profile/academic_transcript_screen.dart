@@ -94,7 +94,7 @@ class AcademicTranscriptScreen extends StatelessWidget {
               itemCount: 4, // 4 Semesters mock
               itemBuilder: (context, index) {
                 int semester = 6 - index;
-                return _buildSemesterCard(semester);
+                return _buildSemesterCard(context, semester);
               },
             ),
             const SizedBox(height: 20),
@@ -104,7 +104,7 @@ class AcademicTranscriptScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSemesterCard(int semester) {
+  Widget _buildSemesterCard(BuildContext context, int semester) {
     // Mock courses
     final courses = [
       {'code': 'CS301', 'name': 'Pemrograman Mobile', 'sks': 3, 'grade': 'A'},
@@ -128,7 +128,7 @@ class AcademicTranscriptScreen extends StatelessWidget {
         ],
       ),
       child: Theme(
-        data: Theme.of(null!).copyWith(dividerColor: Colors.transparent), // Fix context access
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           initiallyExpanded: semester == 6,
           title: Text(
