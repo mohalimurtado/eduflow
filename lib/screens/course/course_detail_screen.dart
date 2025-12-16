@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
+import 'video_player_screen.dart';
+import 'reading_material_screen.dart';
 
 class CourseDetailScreen extends StatefulWidget {
   final String courseTitle;
@@ -123,10 +125,20 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Column(
                 children: [
-                  _buildSubItem(Icons.article, 'Materi Pengenalan', 'PDF', () {}),
-                  _buildSubItem(Icons.play_circle, 'Video Pembelajaran', 'Video', () {}),
+                  _buildSubItem(
+                    Icons.article, 
+                    'Materi Pengenalan', 
+                    'PDF', 
+                    () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReadingMaterialScreen(title: 'Materi Pengenalan'))),
+                  ),
+                  _buildSubItem(
+                    Icons.play_circle, 
+                    'Video Pembelajaran', 
+                    'Video', 
+                    () => Navigator.push(context, MaterialPageRoute(builder: (_) => const VideoPlayerScreen(title: 'Video Pembelajaran'))),
+                  ),
                   if (sessionNumber % 2 != 0) // Example condition for quiz
-                    _buildSubItem(Icons.quiz, 'Kuis Sesi $sessionNumber', 'Kuis', () {}),
+                    _buildSubItem(Icons.quiz, 'Kuis Sesi $sessionNumber', 'Kuis', () {}), // Quiz will be implemented next
                 ],
               ),
             ),
