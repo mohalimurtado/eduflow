@@ -10,68 +10,158 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            const SizedBox(height: 40),
-            // Profile Header
-            const CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage('assets/images/user_profile.png'),
+            // API-like Header using Stack
+            Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: [
+                // Red Background with Curve
+                Container(
+                  height: 180,
+                  decoration: const BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
+                  ),
+                ),
+                // Title (Hidden in scroll, but useful context if needed)
+                const Positioned(
+                  top: 50,
+                  child: Text(
+                    'Profil Saya',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                // Profile Picture (Overlapping)
+                Positioned(
+                  bottom: -60,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 4),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: const CircleAvatar(
+                      radius: 60,
+                      backgroundColor: Colors.white,
+                      backgroundImage: AssetImage('assets/images/user_profile.png'),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
+            
+            const SizedBox(height: 70), // Spacer for overlapping Avatar
+            
+            // Name & Major
             const Text(
               'Alimurtado',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: Color(0xFF2D3436),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             Text(
-              'Mahasiswa - Sistem Informasi',
+              '1202194042 • Sistem Informasi',
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey[600],
+                fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 32),
-
-            // Profile Menu
-            _buildProfileItem(Icons.person_outline, 'Edit Profil', () {}),
-            _buildProfileItem(Icons.school_outlined, 'Riwayat Akademik', () {}),
-            _buildProfileItem(Icons.settings_outlined, 'Pengaturan', () {}),
-            _buildProfileItem(Icons.help_outline, 'Bantuan & Dukungan', () {}),
             
             const SizedBox(height: 24),
             
-            // Logout Button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                   // Navigate back to Login and clear stack
-                   Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginScreen()),
-                    (route) => false,
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red[50],
-                  foregroundColor: Colors.red,
-                  elevation: 0,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-                child: const Text('Keluar'),
+            // Stats Row (Academic Info)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  _buildStatItem('IPK', '3.85', Colors.blue),
+                  _buildDivider(),
+                  _buildStatItem('SKS', '112', Colors.green),
+                  _buildDivider(),
+                  _buildStatItem('Semester', '6', Colors.orange),
+                ],
               ),
             ),
             
-            const SizedBox(height: 20),
-            const Text(
-              'Versi Aplikasi 1.0.0',
-              style: TextStyle(color: Colors.grey, fontSize: 12),
+            const SizedBox(height: 30),
+            
+            // Menu Section
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                   _buildMenuSection(
+                    'Akademik',
+                    [
+                      _buildMenuItem(Icons.school_rounded, 'Riwayat Studi', () {}),
+                      _buildMenuItem(Icons.description_rounded, 'Transkrip Nilai', () {}),
+                      _buildMenuItem(Icons.calendar_month_rounded, 'Jadwal Kuliah', () {}),
+                    ],
+                  ),
+                   const SizedBox(height: 20),
+                   _buildMenuSection(
+                    'Pengaturan',
+                    [
+                      _buildMenuItem(Icons.person_rounded, 'Edit Profil', () {}),
+                      _buildMenuItem(Icons.lock_rounded, 'Ganti Password', () {}),
+                      _buildMenuItem(Icons.settings_rounded, 'Preferensi Aplikasi', () {}),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 30),
+                  
+                  // Logout Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                         Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LoginScreen()),
+                          (route) => false,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFFEBEE),
+                        foregroundColor: AppColors.primary,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.logout_rounded, size: 20),
+                          SizedBox(width: 8),
+                          Text(
+                            'Keluar Aplikasi',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                ],
+              ),
             ),
           ],
         ),
@@ -79,37 +169,94 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileItem(IconData icon, String title, VoidCallback onTap) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.05),
-            spreadRadius: 1,
-            blurRadius: 2,
-            offset: const Offset(0, 1),
+  // Helper Widgets
+  Widget _buildStatItem(String label, String value, Color color) {
+    return Expanded(
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[600],
+            ),
           ),
         ],
       ),
-      child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, color: AppColors.primary, size: 20),
-        ),
-        title: Text(
+    );
+  }
+
+  Widget _buildDivider() {
+    return Container(
+      height: 30,
+      width: 1,
+      color: Colors.grey[300],
+    );
+  }
+
+  Widget _buildMenuSection(String title, List<Widget> items) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
           title,
-          style: const TextStyle(fontWeight: FontWeight.w500),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF2D3436),
+          ),
         ),
-        trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-        onTap: onTap,
+        const SizedBox(height: 12),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.05),
+                spreadRadius: 2,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            children: items,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMenuItem(IconData icon, String title, VoidCallback onTap) {
+    return ListTile(
+      onTap: onTap,
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: AppColors.primary.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(icon, color: AppColors.primary, size: 20),
       ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF2D3436),
+        ),
+      ),
+      trailing: const Icon(Icons.chevron_right_rounded, color: Colors.grey, size: 20),
     );
   }
 }
