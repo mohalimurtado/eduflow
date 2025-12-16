@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import 'main_navigation.dart';
-import 'register_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +56,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 40),
                       child: Image.asset(
-                        'assets/images/login_logo.png', // Updated simple logo
-                        width: 100, // Adjusted size for the icon
+                        'assets/images/login_logo.png',
+                        width: 100,
                       ),
                     ),
+                  ),
+                ),
+                // Back Button
+                Positioned(
+                  top: 40,
+                  left: 20,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () => Navigator.pop(context),
                   ),
                 ),
               ],
@@ -71,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const SizedBox(height: 10),
                   Text(
-                    'Log In',
+                    'Daftar Akun',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppColors.primary,
@@ -79,12 +90,34 @@ class _LoginScreenState extends State<LoginScreen> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 10),
-                   Text(
-                    'Masukan Email dan Password untuk Log In',
-                    textAlign: TextAlign.center, // Fixed Enum Error
+                  Text(
+                    'Lengkapi data diri untuk mendaftar',
+                    textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                   const SizedBox(height: 30),
+
+                  // Name Field
+                  TextField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      labelText: 'Nama Lengkap',
+                      hintText: 'Nama Anda',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: Colors.grey[300]!),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(color: AppColors.primary),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
 
                   // Email Field
                   TextField(
@@ -141,25 +174,47 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
 
-                  // Forgot Password
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        'Lupa Password?',
-                        style: TextStyle(color: AppColors.primary),
+                  // Confirm Password Field
+                  TextField(
+                    controller: _confirmPasswordController,
+                    obscureText: !_isConfirmPasswordVisible,
+                    decoration: InputDecoration(
+                      labelText: 'Konfirmasi Password',
+                      hintText: '********',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: Colors.grey[300]!),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(color: AppColors.primary),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                          });
+                        },
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30),
 
-                  // Login Button
+                  // Register Button
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      // Navigate to Main Navigation (Simulate registration)
+                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => const MainNavigation()),
                       );
@@ -174,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       elevation: 5,
                     ),
                     child: const Text(
-                      'Log In',
+                      'Daftar',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -183,16 +238,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Tidak punya akun? "),
+                      const Text("Sudah punya akun? "),
                       GestureDetector(
                         onTap: () {
-                           Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const RegisterScreen()),
-                          );
+                           Navigator.pop(context); // Go back to login
                         },
                         child: const Text(
-                          "Daftar",
+                          "Masuk",
                           style: TextStyle(
                             color: AppColors.primary,
                             fontWeight: FontWeight.bold,
