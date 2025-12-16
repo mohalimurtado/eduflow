@@ -6,6 +6,7 @@ import 'student_schedule_screen.dart';
 import 'academic_transcript_screen.dart';
 import 'history_study_screen.dart';
 import 'change_password_screen.dart';
+import 'app_preferences_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -163,7 +164,10 @@ class ProfileScreen extends StatelessWidget {
                       _buildMenuItem(
                         Icons.settings_rounded, 
                         'Preferensi Aplikasi', 
-                        () => _showFeatureDialog(context, 'Preferensi Aplikasi')
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const AppPreferencesScreen()),
+                        ),
                       ),
                     ],
                   ),
