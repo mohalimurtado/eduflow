@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import 'course/course_detail_screen.dart';
-import 'my_classes_screen.dart'; // Added import
+import 'my_classes_screen.dart';
 import 'profile/profile_screen.dart';
+import 'profile/student_schedule_screen.dart';
+import 'profile/academic_transcript_screen.dart';
+import 'assignment/assignment_screen.dart';
+import 'quiz/quiz_start_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -140,10 +144,34 @@ class HomeScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildQuickAction(Icons.calendar_today, 'Jadwal', Colors.blue),
-                      _buildQuickAction(Icons.assignment_outlined, 'Tugas', Colors.orange),
-                      _buildQuickAction(Icons.quiz_outlined, 'Ujian', Colors.purple),
-                      _buildQuickAction(Icons.bar_chart_rounded, 'Nilai', Colors.green),
+                      _buildQuickAction(
+                        context,
+                        Icons.calendar_today, 
+                        'Jadwal', 
+                        Colors.blue,
+                        () => Navigator.push(context, MaterialPageRoute(builder: (context) => const StudentScheduleScreen())),
+                      ),
+                      _buildQuickAction(
+                        context,
+                        Icons.assignment_outlined, 
+                        'Tugas', 
+                        Colors.orange,
+                        () => Navigator.push(context, MaterialPageRoute(builder: (context) => const AssignmentScreen(title: 'Tugas Personal 1'))),
+                      ),
+                      _buildQuickAction(
+                        context,
+                        Icons.quiz_outlined, 
+                        'Ujian', 
+                        Colors.purple,
+                        () => Navigator.push(context, MaterialPageRoute(builder: (context) => const QuizStartScreen())),
+                      ),
+                      _buildQuickAction(
+                        context,
+                        Icons.bar_chart_rounded, 
+                        'Nilai', 
+                        Colors.green,
+                        () => Navigator.push(context, MaterialPageRoute(builder: (context) => const AcademicTranscriptScreen())),
+                      ),
                     ],
                   ),
                 ],
@@ -348,26 +376,30 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickAction(IconData icon, String label, Color color) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(16),
+  Widget _buildQuickAction(BuildContext context, IconData icon, String label, Color color, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Icon(icon, color: color, size: 28),
           ),
-          child: Icon(icon, color: color, size: 28),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
