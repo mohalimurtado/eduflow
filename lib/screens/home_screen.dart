@@ -11,60 +11,92 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBar(
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-             Text(
-              'Hi, Alimurtado', // Hardcoded for demo/snapshot
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-             Text(
-              'Selamat Datang Kembali',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {},
-          ),
-          const SizedBox(width: 8),
-          GestureDetector(
-            onTap: () {
-               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfileScreen()),
-               );
-            },
-            child: const CircleAvatar(
-              backgroundImage: AssetImage('assets/images/user_profile.png'),
-              radius: 18,
-            ),
-          ),
-          const SizedBox(width: 16),
-        ],
-        backgroundColor: AppColors.primary,
-        elevation: 0,
-        toolbarHeight: 70,
-      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Banner / Stats Section
+            // Custom Header with Search
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(20, 50, 20, 30),
               decoration: const BoxDecoration(
                 color: AppColors.primary,
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(24),
-                  bottomRight: Radius.circular(24),
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
                 ),
               ),
               child: Column(
                 children: [
+                  // Top Row: Greeting & Profile
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Hi, Alimurtado',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Selamat Datang Kembali',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+                          ),
+                          child: const CircleAvatar(
+                            backgroundImage: AssetImage('assets/images/user_profile.png'),
+                            radius: 22,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Search Bar
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: const TextField(
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.search, color: Colors.grey),
+                        hintText: 'Cari tugas, materi, atau kelas...',
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Stats Row
                   Row(
                     children: [
                       Expanded(
@@ -72,8 +104,8 @@ class HomeScreen extends StatelessWidget {
                           icon: Icons.check_circle_outline,
                           label: 'Tugas Selesai',
                           value: '12',
-                          color: Colors.white,
-                          textColor: AppColors.primary,
+                          color: Colors.white.withOpacity(0.15),
+                          textColor: Colors.white,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -82,7 +114,7 @@ class HomeScreen extends StatelessWidget {
                           icon: Icons.pending_actions,
                           label: 'Tugas Menunggu',
                           value: '4',
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withOpacity(0.15),
                           textColor: Colors.white,
                         ),
                       ),
