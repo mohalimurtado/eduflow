@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
 import '../login_screen.dart';
+import 'edit_profile_screen.dart';
+import 'student_schedule_screen.dart';
+import 'academic_transcript_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -109,18 +112,51 @@ class ProfileScreen extends StatelessWidget {
                    _buildMenuSection(
                     'Akademik',
                     [
-                      _buildMenuItem(Icons.school_rounded, 'Riwayat Studi', () => _showFeatureDialog(context, 'Riwayat Studi')),
-                      _buildMenuItem(Icons.description_rounded, 'Transkrip Nilai', () => _showFeatureDialog(context, 'Transkrip Nilai')),
-                      _buildMenuItem(Icons.calendar_month_rounded, 'Jadwal Kuliah', () => _showFeatureDialog(context, 'Jadwal Kuliah')),
+                      _buildMenuItem(
+                        Icons.school_rounded, 
+                        'Riwayat Studi', 
+                        () => _showFeatureDialog(context, 'Riwayat Studi') // Placeholder for now
+                      ),
+                      _buildMenuItem(
+                        Icons.description_rounded, 
+                        'Transkrip Nilai', 
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const AcademicTranscriptScreen()),
+                        ),
+                      ),
+                      _buildMenuItem(
+                        Icons.calendar_month_rounded, 
+                        'Jadwal Kuliah', 
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const StudentScheduleScreen()),
+                        ),
+                      ),
                     ],
                   ),
                    const SizedBox(height: 20),
                    _buildMenuSection(
                     'Pengaturan',
                     [
-                      _buildMenuItem(Icons.person_rounded, 'Edit Profil', () => _showFeatureDialog(context, 'Edit Profil')),
-                      _buildMenuItem(Icons.lock_rounded, 'Ganti Password', () => _showFeatureDialog(context, 'Ganti Password')),
-                      _buildMenuItem(Icons.settings_rounded, 'Preferensi Aplikasi', () => _showFeatureDialog(context, 'Preferensi Aplikasi')),
+                      _buildMenuItem(
+                        Icons.person_rounded, 
+                        'Edit Profil', 
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const EditProfileScreen()),
+                        ),
+                      ),
+                      _buildMenuItem(
+                        Icons.lock_rounded, 
+                        'Ganti Password', 
+                        () => _showFeatureDialog(context, 'Ganti Password')
+                      ),
+                      _buildMenuItem(
+                        Icons.settings_rounded, 
+                        'Preferensi Aplikasi', 
+                        () => _showFeatureDialog(context, 'Preferensi Aplikasi')
+                      ),
                     ],
                   ),
                   
