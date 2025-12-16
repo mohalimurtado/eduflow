@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'my_classes_screen.dart';
-// Will import other screens as they are created
-// import 'notification_screen.dart';
+import 'notification/notification_screen.dart';
 // import 'notification_screen.dart';
 // import 'profile_screen.dart';
 import '../theme/app_colors.dart';
@@ -22,7 +21,7 @@ class _MainNavigationState extends State<MainNavigation> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const MyClassesScreen(), // Use actual screen
-    const Scaffold(body: Center(child: Text('Notifications - Coming Soon'))), // Placeholder
+    const NotificationScreen(), // Use actual screen
     const Scaffold(body: Center(child: Text('Profile - Coming Soon'))), // Placeholder
   ];
 
