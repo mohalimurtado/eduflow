@@ -109,18 +109,18 @@ class ProfileScreen extends StatelessWidget {
                    _buildMenuSection(
                     'Akademik',
                     [
-                      _buildMenuItem(Icons.school_rounded, 'Riwayat Studi', () {}),
-                      _buildMenuItem(Icons.description_rounded, 'Transkrip Nilai', () {}),
-                      _buildMenuItem(Icons.calendar_month_rounded, 'Jadwal Kuliah', () {}),
+                      _buildMenuItem(Icons.school_rounded, 'Riwayat Studi', () => _showFeatureDialog(context, 'Riwayat Studi')),
+                      _buildMenuItem(Icons.description_rounded, 'Transkrip Nilai', () => _showFeatureDialog(context, 'Transkrip Nilai')),
+                      _buildMenuItem(Icons.calendar_month_rounded, 'Jadwal Kuliah', () => _showFeatureDialog(context, 'Jadwal Kuliah')),
                     ],
                   ),
                    const SizedBox(height: 20),
                    _buildMenuSection(
                     'Pengaturan',
                     [
-                      _buildMenuItem(Icons.person_rounded, 'Edit Profil', () {}),
-                      _buildMenuItem(Icons.lock_rounded, 'Ganti Password', () {}),
-                      _buildMenuItem(Icons.settings_rounded, 'Preferensi Aplikasi', () {}),
+                      _buildMenuItem(Icons.person_rounded, 'Edit Profil', () => _showFeatureDialog(context, 'Edit Profil')),
+                      _buildMenuItem(Icons.lock_rounded, 'Ganti Password', () => _showFeatureDialog(context, 'Ganti Password')),
+                      _buildMenuItem(Icons.settings_rounded, 'Preferensi Aplikasi', () => _showFeatureDialog(context, 'Preferensi Aplikasi')),
                     ],
                   ),
                   
@@ -170,6 +170,22 @@ class ProfileScreen extends StatelessWidget {
   }
 
   // Helper Widgets
+  void _showFeatureDialog(BuildContext context, String featureName) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(featureName),
+        content: Text('Fitur $featureName akan segera tersedia di pembaruan berikutnya.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildStatItem(String label, String value, Color color) {
     return Expanded(
       child: Column(
