@@ -5,6 +5,7 @@ import 'edit_profile_screen.dart';
 import 'student_schedule_screen.dart';
 import 'academic_transcript_screen.dart';
 import 'history_study_screen.dart';
+import 'change_password_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -154,7 +155,10 @@ class ProfileScreen extends StatelessWidget {
                       _buildMenuItem(
                         Icons.lock_rounded, 
                         'Ganti Password', 
-                        () => _showFeatureDialog(context, 'Ganti Password')
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ChangePasswordScreen()),
+                        ),
                       ),
                       _buildMenuItem(
                         Icons.settings_rounded, 
