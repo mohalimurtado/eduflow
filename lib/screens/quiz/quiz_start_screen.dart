@@ -19,7 +19,7 @@ class QuizStartScreen extends StatelessWidget {
           children: [
             const Spacer(),
             Image.asset(
-              'assets/images/user_profile.png', // Placeholder icon
+              'assets/images/user_profile.jpg', // Placeholder icon
               height: 80,
             ),
             const SizedBox(height: 24),

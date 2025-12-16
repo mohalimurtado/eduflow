@@ -42,7 +42,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.grey[200]!, width: 2),
                         image: const DecorationImage(
-                          image: AssetImage('assets/images/user_profile.png'),
+                          image: AssetImage('assets/images/user_profile.jpg'),
                           fit: BoxFit.cover,
                         ),
                       ),
