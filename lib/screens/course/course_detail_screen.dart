@@ -86,71 +86,106 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
   }
 
   Widget _buildSessionList() {
-    return ListView.builder(
+    return ListView(
       padding: const EdgeInsets.all(16),
-      itemCount: 5,
-      itemBuilder: (context, index) {
-        return _buildSessionItem(index + 1);
-      },
+      children: [
+        // Title Materi
+        Image.asset('assets/images/title_materi.png', width: 120, alignment: Alignment.centerLeft),
+        const SizedBox(height: 16),
+        
+        // Session Items 1-3
+        for (int i = 1; i <= 3; i++) _buildSessionItem(i),
+        
+        const SizedBox(height: 16),
+        // Title Tugas & Kuis
+        Image.asset('assets/images/title_tugas_kuis.png', width: 140, alignment: Alignment.centerLeft),
+        const SizedBox(height: 16),
+
+        // Session/Assessment Items 4-6
+        for (int i = 4; i <= 6; i++) _buildSessionItem(i),
+      ],
     );
   }
 
   Widget _buildSessionItem(int sessionNumber) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          title: Text(
-            'Sesi $sessionNumber',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          subtitle: const Text('Pengenalan & Konsep Dasar'),
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Column(
-                children: [
-                  _buildSubItem(
-                    Icons.article, 
-                    'Materi Pengenalan', 
-                    'PDF', 
-                    () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReadingMaterialScreen(title: 'Materi Pengenalan'))),
-                  ),
-                  _buildSubItem(
-                    Icons.play_circle, 
-                    'Video Pembelajaran', 
-                    'Video', 
-                    () => Navigator.push(context, MaterialPageRoute(builder: (_) => const VideoPlayerScreen(title: 'Video Pembelajaran'))),
-                  ),
-                  if (sessionNumber % 2 != 0) // Example condition for quiz
-                    _buildSubItem(
-                      Icons.quiz, 
-                      'Kuis Sesi $sessionNumber', 
-                      'Kuis', 
-                      () => Navigator.push(context, MaterialPageRoute(builder: (_) => AssignmentScreen(title: 'Kuis Sesi $sessionNumber'))),
+    // Determine status icon based on mock logic (e.g., 1 & 2 done)
+    String checkIcon = (sessionNumber <= 2) ? 'assets/images/ic_check_green.png' : 'assets/images/ic_check_grey.png';
+
+    // Mock sub-items visibility
+    bool isExpanded = false; 
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          child: Column(
+            children: [
+              // Session Card Header (Image)
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    isExpanded = !isExpanded;
+                  });
+                },
+                child: Stack(
+                  alignment: Alignment.centerRight,
+                  children: [
+                    Image.asset(
+                      'assets/images/session_0$sessionNumber.png',
+                      width: double.infinity,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container( // Fallback if image missing (e.g. session 2/3 which might not be uploaded as session_0x)
+                          height: 60,
+                          color: Colors.grey[300],
+                          alignment: Alignment.center,
+                          child: Text('Session $sessionNumber (Image Missing)'),
+                        );
+                      },
                     ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: Image.asset(checkIcon, width: 24),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
+
+              // Divider
+              Image.asset('assets/images/divider_gradient.png', width: double.infinity, fit: BoxFit.cover),
+
+              // Expanded Content
+              if (isExpanded)
+                Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Column(
+                    children: [
+                       _buildSubItem(
+                        Icons.article, 
+                        'Materi Bacaan', 
+                        'PDF', 
+                        () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReadingMaterialScreen(title: 'Materi Bacaan'))),
+                      ),
+                       _buildSubItem(
+                        Icons.play_circle, 
+                        'Video Pembelajaran', 
+                        'Video', 
+                        () => Navigator.push(context, MaterialPageRoute(builder: (_) => const VideoPlayerScreen(title: 'Video Pembelajaran'))),
+                      ),
+                       _buildSubItem(
+                        Icons.assignment, 
+                        'Tugas/Kuis', 
+                        'Quiz', 
+                        () => Navigator.push(context, MaterialPageRoute(builder: (_) => AssignmentScreen(title: 'Kuis Sesi $sessionNumber'))),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        );
+      }
     );
   }
 

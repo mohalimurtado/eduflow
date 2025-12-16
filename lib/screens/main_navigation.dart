@@ -36,31 +36,58 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'Classes',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Activity',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        onTap: _onItemTapped,
+      // Floating Bottom Nav with fixed height as per design
+      bottomNavigationBar: SizedBox(
+        height: 80, // Slightly taller than 56 to allow for the curve effect if present, effectively 56 for the bar content
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            // Background Image
+            Container(
+              width: double.infinity,
+              height: 80, // Matching container
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/bottom_nav_bg.png'),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+            
+            // Touch Targets
+            SizedBox(
+              height: 56, // The clickable area standard height
+              child: Row(
+                children: [
+                  // Home Target
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => _onItemTapped(0),
+                      behavior: HitTestBehavior.opaque,
+                      child: Container(color: Colors.transparent),
+                    ),
+                  ),
+                  // Kelas Saya Target (Center)
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => _onItemTapped(1),
+                      behavior: HitTestBehavior.opaque,
+                      child: Container(color: Colors.transparent),
+                    ),
+                  ),
+                  // Notifikasi Target
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => _onItemTapped(2),
+                      behavior: HitTestBehavior.opaque,
+                      child: Container(color: Colors.transparent),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

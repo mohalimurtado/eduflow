@@ -24,17 +24,15 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFB71C1C), // Deep Red
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/celoe_splash.png',
-              width: 200,
+              'assets/images/celoe_logo_white.png',
+              width: 250, // Slightly larger for better visibility
             ),
-            const SizedBox(height: 20),
-            const CircularProgressIndicator(),
           ],
         ),
       ),

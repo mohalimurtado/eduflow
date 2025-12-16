@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import 'course/course_detail_screen.dart';
+import 'profile/profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -28,9 +30,17 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {},
           ),
           const SizedBox(width: 8),
-          const CircleAvatar(
-            backgroundImage: AssetImage('assets/images/user_profile.png'), // Placeholder
-            radius: 18,
+          GestureDetector(
+            onTap: () {
+               Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+               );
+            },
+            child: const CircleAvatar(
+              backgroundImage: AssetImage('assets/images/user_profile.png'),
+              radius: 18,
+            ),
           ),
           const SizedBox(width: 16),
         ],
