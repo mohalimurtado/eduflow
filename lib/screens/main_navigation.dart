@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'my_classes_screen.dart';
 import 'notification/notification_screen.dart';
+import 'profile/profile_screen.dart';
 // import 'notification_screen.dart';
-// import 'profile_screen.dart';
+
 import '../theme/app_colors.dart';
 
 class MainNavigation extends StatefulWidget {
@@ -22,7 +23,7 @@ class _MainNavigationState extends State<MainNavigation> {
     const HomeScreen(),
     const MyClassesScreen(), // Use actual screen
     const NotificationScreen(), // Use actual screen
-    const Scaffold(body: Center(child: Text('Profile - Coming Soon'))), // Placeholder
+    const ProfileScreen(), // Use actual screen
   ];
 
   void _onItemTapped(int index) {
