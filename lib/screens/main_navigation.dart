@@ -54,38 +54,50 @@ class _MainNavigationState extends State<MainNavigation> {
               ),
             ),
             
-            // Touch Targets
+            // Touch Targets & Icons
             SizedBox(
-              height: 56, // The clickable area standard height
+              height: 56, 
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  // Home Target
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => _onItemTapped(0),
-                      behavior: HitTestBehavior.opaque,
-                      child: Container(color: Colors.transparent),
-                    ),
-                  ),
-                  // Kelas Saya Target (Center)
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => _onItemTapped(1),
-                      behavior: HitTestBehavior.opaque,
-                      child: Container(color: Colors.transparent),
-                    ),
-                  ),
-                  // Notifikasi Target
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => _onItemTapped(2),
-                      behavior: HitTestBehavior.opaque,
-                      child: Container(color: Colors.transparent),
-                    ),
-                  ),
+                  _buildNavItem(Icons.home_rounded, 'Home', 0),
+                  _buildNavItem(Icons.school_rounded, 'Kelas', 1),
+                  _buildNavItem(Icons.notifications_rounded, 'Aktivitas', 2),
                 ],
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(IconData icon, String label, int index) {
+    final bool isSelected = _selectedIndex == index;
+    return GestureDetector(
+      onTap: () => _onItemTapped(index),
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? Colors.white : Colors.white.withOpacity(0.6),
+              size: isSelected ? 26 : 24,
+            ),
+            if (isSelected) ...[
+              const SizedBox(height: 4),
+              Container(
+                width: 4,
+                height: 4,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ],
           ],
         ),
       ),
