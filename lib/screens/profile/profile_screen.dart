@@ -4,6 +4,7 @@ import '../login_screen.dart';
 import 'edit_profile_screen.dart';
 import 'student_schedule_screen.dart';
 import 'academic_transcript_screen.dart';
+import 'history_study_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -115,7 +116,10 @@ class ProfileScreen extends StatelessWidget {
                       _buildMenuItem(
                         Icons.school_rounded, 
                         'Riwayat Studi', 
-                        () => _showFeatureDialog(context, 'Riwayat Studi') // Placeholder for now
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const HistoryStudyScreen()),
+                        ),
                       ),
                       _buildMenuItem(
                         Icons.description_rounded, 
