@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import 'course/course_detail_screen.dart';
 
 class MyClassesScreen extends StatefulWidget {
   const MyClassesScreen({super.key});
@@ -114,21 +115,31 @@ class _MyClassesScreenState extends State<MyClassesScreen> with SingleTickerProv
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header Image / Color
-          Container(
-            height: 100,
-            decoration: const BoxDecoration(
-              color: AppColors.primaryDark, // Fallback if no image
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-              image: DecorationImage(
-                image: AssetImage('assets/images/home_dashboard.png'), // Placeholder using generic
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(Colors.black38, BlendMode.darken),
-              ),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CourseDetailScreen(courseTitle: data.title),
             ),
+          );
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header Image / Color
+            Container(
+              height: 100,
+              decoration: const BoxDecoration(
+                color: AppColors.primaryDark, // Fallback if no image
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                image: DecorationImage(
+                  image: AssetImage('assets/images/home_dashboard.png'), // Placeholder using generic
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(Colors.black38, BlendMode.darken),
+                ),
+              ),
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,6 +223,7 @@ class _MyClassesScreenState extends State<MyClassesScreen> with SingleTickerProv
             ),
           ),
         ],
+      ),
       ),
     );
   }
