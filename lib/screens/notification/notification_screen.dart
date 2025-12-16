@@ -18,13 +18,13 @@ class NotificationScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         itemCount: 8,
         itemBuilder: (context, index) {
-          return _buildNotificationItem(index);
+          return _buildNotificationItem(context, index);
         },
       ),
     );
   }
 
-  Widget _buildNotificationItem(int index) {
+  Widget _buildNotificationItem(BuildContext context, int index) {
     final bool isUnread = index < 3;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
