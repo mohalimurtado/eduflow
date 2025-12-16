@@ -1,51 +1,39 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Sign Up
-  Future<User?> signUp({
+  // Sign Up (Auth Only)
+  Future<UserCredential> signUp({
     required String email,
     required String password,
-    required String name,
   }) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
+      return await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      User? user = result.user;
-
-      if (user != null) {
-        // Save additional user info to Firestore
-        await _firestore.collection('users').doc(user.uid).set({
-          'uid': user.uid,
-          'name': name,
-          'email': email,
-          'createdAt': FieldValue.serverTimestamp(),
-          'role': 'student', // Default role
-        });
-      }
-      return user;
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthException(e);
     } catch (e) {
-      print(e.toString());
-      rethrow; // Pass error to UI
+      throw 'Terjadi kesalahan tidak dikenal: $e';
     }
   }
 
   // Sign In
-  Future<User?> signIn({required String email, required String password}) async {
+  Future<UserCredential> signIn({
+    required String email,
+    required String password,
+  }) async {
     try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(
+      return await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      return result.user;
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthException(e);
     } catch (e) {
-      print(e.toString());
-      rethrow;
+      throw 'Terjadi kesalahan tidak dikenal: $e';
     }
   }
 
@@ -56,4 +44,32 @@ class AuthService {
 
   // Get Current User
   User? get currentUser => _auth.currentUser;
+
+  // Error Handler
+  String _handleAuthException(FirebaseAuthException e) {
+    switch (e.code) {
+      // Register
+      case 'email-already-in-use':
+        return 'Email sudah terdaftar. Gunakan email lain.';
+      case 'invalid-email':
+        return 'Format email tidak valid.';
+      case 'operation-not-allowed':
+        return 'Operasi ini tidak diizinkan.';
+      case 'weak-password':
+        return 'Password terlalu lemah.';
+      
+      // Login
+      case 'user-not-found':
+        return 'Pengguna tidak ditemukan. Silakan daftar.';
+      case 'wrong-password':
+        return 'Password salah.';
+      case 'user-disabled':
+        return 'Akun pengguna ini telah dinonaktifkan.';
+      case 'invalid-credential':
+        return 'Kredensial tidak valid.';
+        
+      default:
+        return 'Terjadi kesalahan: ${e.message}';
+    }
+  }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../theme/app_colors.dart';
 import '../login_screen.dart';
 import 'edit_profile_screen.dart';
@@ -7,12 +9,65 @@ import 'academic_transcript_screen.dart';
 import 'history_study_screen.dart';
 import 'change_password_screen.dart';
 import 'app_preferences_screen.dart';
+import '../../services/auth_service.dart';
+import '../../services/user_service.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final UserService _userService = UserService();
+  final AuthService _authService = AuthService();
+  
+  Map<String, dynamic>? _userData;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      final user = _authService.currentUser;
+      if (user != null) {
+        final doc = await _userService.getUser(user.uid);
+        if (doc.exists && mounted) {
+          setState(() {
+            _userData = doc.data() as Map<String, dynamic>;
+            _isLoading = false;
+          });
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Gagal memuat profil: $e")),
+        );
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    
+    // Fallback if data is missing but auth exists (shouldn't happen often)
+    final displayName = _userData?['name'] ?? 'Pengguna';
+    final displayEmail = _userData?['email'] ?? 'Belum ada email';
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: SingleChildScrollView(
@@ -31,7 +86,7 @@ class ProfileScreen extends StatelessWidget {
                     borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
                   ),
                 ),
-                // Title (Hidden in scroll, but useful context if needed)
+                // Title
                 const Positioned(
                   top: 50,
                   child: Text(
@@ -43,7 +98,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Profile Picture (Overlapping)
+                // Profile Picture
                 Positioned(
                   bottom: -60,
                   child: Container(
@@ -70,10 +125,10 @@ class ProfileScreen extends StatelessWidget {
             
             const SizedBox(height: 70), // Spacer for overlapping Avatar
             
-            // Name & Major
-            const Text(
-              'Alimurtado',
-              style: TextStyle(
+            // Name & Email
+            Text(
+              displayName,
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF2D3436),
@@ -81,7 +136,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '1202194042 • Sistem Informasi',
+              displayEmail,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey[600],
@@ -178,12 +233,15 @@ class ProfileScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                         Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => const LoginScreen()),
-                          (route) => false,
-                        );
+                      onPressed: () async {
+                         await _authService.signOut();
+                         if (mounted) {
+                           Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => const LoginScreen()),
+                            (route) => false,
+                          );
+                         }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFFFEBEE),

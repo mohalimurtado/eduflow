@@ -3,6 +3,7 @@ import '../theme/app_colors.dart';
 import 'main_navigation.dart';
 
 import '../services/auth_service.dart';
+import '../services/user_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -17,6 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final AuthService _authService = AuthService();
+  final UserService _userService = UserService();
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
   bool _isLoading = false;
@@ -53,17 +55,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      await _authService.signUp(email: email, password: password, name: name);
-      if (mounted) {
-         Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MainNavigation()),
-        );
+      print("[DEBUG] Starting sign up...");
+      // 1. Create User in Auth
+      final userCredential = await _authService.signUp(email: email, password: password);
+      print("[DEBUG] Auth success: ${userCredential.user?.uid}");
+      final user = userCredential.user;
+
+      if (user != null) {
+        // 2. Save User to Firestore
+        print("[DEBUG] Saving to Firestore...");
+        await _userService.createUser(
+          uid: user.uid,
+          name: name,
+          email: email,
+        ).timeout(const Duration(seconds: 5), onTimeout: () {
+          // Warning only. Since user confirmed data enters DB, we assume successful background write.
+          print("[WARN] Firestore write timed out (ACK missing), continuing anyway.");
+        });
+        print("[DEBUG] Firestore done (or timed out safely)");
+
+        if (mounted) {
+           Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MainNavigation()),
+          );
+        }
       }
     } catch (e) {
+      print("[DEBUG] Error: $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gagal Mendaftar: $e')),
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
