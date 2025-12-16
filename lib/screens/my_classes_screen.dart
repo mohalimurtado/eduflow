@@ -35,7 +35,7 @@ class _MyClassesScreenState extends State<MyClassesScreen> with SingleTickerProv
         ),
         centerTitle: true,
         bottom: TabBar(
-          controller._tabController,
+          controller: _tabController,
           indicatorColor: Colors.white,
           indicatorWeight: 3,
           labelStyle: const TextStyle(fontWeight: FontWeight.bold),
