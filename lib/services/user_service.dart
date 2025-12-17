@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserService {
@@ -21,11 +22,18 @@ class UserService {
     }
   }
 
-  Future<DocumentSnapshot> getUser(String uid) async {
+  Future<DocumentSnapshot?> getUser(String uid) async {
     try {
-      return await _firestore.collection('users').doc(uid).get();
+      return await _firestore
+          .collection('users')
+          .doc(uid)
+          .get()
+          .timeout(
+            const Duration(seconds: 3),
+            onTimeout: () => throw TimeoutException('Firestore timeout'),
+          );
     } catch (e) {
-      throw Exception('Gagal mengambil data user: $e');
+      return null; // Return null silently on timeout or error
     }
   }
 }

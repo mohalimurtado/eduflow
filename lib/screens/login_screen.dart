@@ -99,15 +99,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 40),
                       child: Stack(
-                        alignment: Alignment.center, // Center alignment for Stack
+                        alignment: Alignment.center,
                         children: [
                           Image.asset(
-                            'assets/images/red_circle_bg.png', // Background Circle
-                             width: 140, // Slightly larger than the logo
-                             height: 140,
+                            'assets/images/red_circle_bg.png',
+                            width: 140,
+                            height: 140,
                           ),
                           Image.asset(
-                            'assets/images/login_logo.png', // Logo
+                            'assets/images/login_logo.png',
                             width: 100,
                           ),
                         ],

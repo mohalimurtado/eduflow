@@ -89,17 +89,36 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        // Title Materi
-        Image.asset('assets/images/title_materi.png', width: 120, alignment: Alignment.centerLeft),
-        const SizedBox(height: 16),
+        // Materi Section
+        const Padding(
+          padding: EdgeInsets.only(bottom: 16),
+          child: Text(
+            'Materi',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF2d3436),
+            ),
+          ),
+        ),
         
         // Session Items 1-3
         for (int i = 1; i <= 3; i++) _buildSessionItem(i),
         
-        const SizedBox(height: 16),
-        // Title Tugas & Kuis
-        Image.asset('assets/images/title_tugas_kuis.png', width: 140, alignment: Alignment.centerLeft),
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
+        
+        // Tugas & Kuis Section
+        const Padding(
+          padding: EdgeInsets.only(bottom: 16),
+          child: Text(
+            'Tugas & Kuis',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF2d3436),
+            ),
+          ),
+        ),
 
         // Session/Assessment Items 4-6
         for (int i = 4; i <= 6; i++) _buildSessionItem(i),
@@ -108,72 +127,120 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> with SingleTick
   }
 
   Widget _buildSessionItem(int sessionNumber) {
-    // Determine status icon based on mock logic (e.g., 1 & 2 done)
-    String checkIcon = (sessionNumber <= 2) ? 'assets/images/ic_check_green.png' : 'assets/images/ic_check_grey.png';
-
-    // Mock sub-items visibility
-    bool isExpanded = false; 
-
+    bool isDone = sessionNumber <= 2;
+    
     return StatefulBuilder(
       builder: (context, setState) {
-        return Container(
+        bool isExpanded = false;
+        
+        return Card(
           margin: const EdgeInsets.only(bottom: 16),
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: Column(
             children: [
-              // Session Card Header (Image)
               InkWell(
                 onTap: () {
                   setState(() {
                     isExpanded = !isExpanded;
                   });
                 },
-                child: Stack(
-                  alignment: Alignment.centerRight,
-                  children: [
-                    Image.asset(
-                      'assets/images/session_0$sessionNumber.png',
-                      width: double.infinity,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container( // Fallback if image missing (e.g. session 2/3 which might not be uploaded as session_0x)
-                          height: 60,
-                          color: Colors.grey[300],
-                          alignment: Alignment.center,
-                          child: Text('Session $sessionNumber (Image Missing)'),
-                        );
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: Image.asset(checkIcon, width: 24),
-                    ),
-                  ],
+                borderRadius: BorderRadius.circular(16),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      // Session number badge
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: isDone 
+                            ? AppColors.primary.withOpacity(0.1)
+                            : Colors.grey.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '0$sessionNumber',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: isDone ? AppColors.primary : Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      // Title and subtitle
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              sessionNumber <= 3 
+                                ? 'Pengantar User Interface Design'
+                                : sessionNumber == 4
+                                  ? 'Tugas Personal 1'
+                                  : sessionNumber == 5
+                                    ? 'Kuis Pertemuan 1-3'
+                                    : 'Tugas Kelompok 1',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF2d3436),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '3 URL • 2 Files • 3 Interactive Content',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Status icon
+                      Icon(
+                        isDone ? Icons.check_circle : Icons.radio_button_unchecked,
+                        color: isDone ? Colors.green : Colors.grey,
+                        size: 24,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-
-              // Divider
-              Image.asset('assets/images/divider_gradient.png', width: double.infinity, fit: BoxFit.cover),
-
-              // Expanded Content
+              
+              // Expanded content
               if (isExpanded)
                 Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[50],
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(16),
+                      bottomRight: Radius.circular(16),
+                    ),
+                  ),
                   child: Column(
                     children: [
-                       _buildSubItem(
+                      const Divider(height: 1),
+                      _buildSubItem(
                         Icons.article, 
                         'Materi Bacaan', 
                         'PDF', 
                         () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReadingMaterialScreen(title: 'Materi Bacaan'))),
                       ),
-                       _buildSubItem(
+                      _buildSubItem(
                         Icons.play_circle, 
                         'Video Pembelajaran', 
                         'Video', 
                         () => Navigator.push(context, MaterialPageRoute(builder: (_) => const VideoPlayerScreen(title: 'Video Pembelajaran'))),
                       ),
-                       _buildSubItem(
+                      _buildSubItem(
                         Icons.assignment, 
                         'Tugas/Kuis', 
                         'Quiz', 

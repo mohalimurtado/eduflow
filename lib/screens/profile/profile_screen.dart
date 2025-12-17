@@ -24,11 +24,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final AuthService _authService = AuthService();
   
   Map<String, dynamic>? _userData;
-  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    // Set initial data from Auth immediately (no loading)
+    final user = _authService.currentUser;
+    if (user != null) {
+      _userData = {
+        'name': user.displayName ?? user.email?.split('@')[0] ?? 'Pengguna',
+        'email': user.email ?? 'Belum ada email',
+      };
+    }
+    // Load from Firestore in background
     _loadUserData();
   }
 
@@ -36,35 +44,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       final user = _authService.currentUser;
       if (user != null) {
-        final doc = await _userService.getUser(user.uid);
-        if (doc.exists && mounted) {
+        final doc = await _userService.getUser(user.uid).timeout(
+          const Duration(seconds: 3),
+          onTimeout: () => null,
+        );
+        
+        if (doc != null && doc.exists && mounted) {
           setState(() {
             _userData = doc.data() as Map<String, dynamic>;
-            _isLoading = false;
           });
         }
       }
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Gagal memuat profil: $e")),
-        );
-      }
+      // Keep using Auth data silently
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-    
-    // Fallback if data is missing but auth exists (shouldn't happen often)
+    // Fallback if data is missing
     final displayName = _userData?['name'] ?? 'Pengguna';
     final displayEmail = _userData?['email'] ?? 'Belum ada email';
 

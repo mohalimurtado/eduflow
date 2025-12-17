@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Image.asset(
               'assets/images/celoe_logo_white.png',
-              width: 250, // Slightly larger for better visibility
+              width: 300, // Slightly larger for better visibility
             ),
           ],
         ),
