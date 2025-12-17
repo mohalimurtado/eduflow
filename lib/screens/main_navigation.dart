@@ -36,56 +36,66 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_selectedIndex],
-      // Floating Bottom Nav with fixed height as per design
-      bottomNavigationBar: SizedBox(
-        height: 56, // Exact 56px as requested
-        child: Stack(
-          alignment: Alignment.bottomCenter,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -5),
+            ),
+          ],
+        ),
+        child: SafeArea(
+          child: Container(
+            height: 70,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildNavItem(0, Icons.home_rounded, 'Home'),
+                _buildNavItem(1, Icons.calendar_month_rounded, 'Jadwal'),
+                _buildNavItem(2, Icons.notifications_rounded, 'Notifikasi'),
+                _buildNavItem(3, Icons.person_rounded, 'Profil'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(int index, IconData icon, String label) {
+    bool isSelected = _selectedIndex == index;
+    return GestureDetector(
+      onTap: () => _onItemTapped(index),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.fastOutSlowIn,
+        padding: EdgeInsets.symmetric(horizontal: isSelected ? 20 : 10, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
           children: [
-            // Background Image
-            Container(
-              width: double.infinity,
-              height: 56, // Matching container
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/bottom_nav_bg.png'),
-                  fit: BoxFit.fill,
+            Icon(
+              icon,
+              color: isSelected ? AppColors.primary : Colors.grey,
+              size: 24,
+            ),
+            if (isSelected) ...[
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
                 ),
               ),
-            ),
-            
-            // Touch Targets (Invisible - using background image icons)
-            SizedBox(
-              height: 56, 
-              child: Row(
-                children: [
-                  // Home Target
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => _onItemTapped(0),
-                      behavior: HitTestBehavior.opaque,
-                      child: Container(color: Colors.transparent),
-                    ),
-                  ),
-                  // Kelas Target
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => _onItemTapped(1),
-                      behavior: HitTestBehavior.opaque,
-                      child: Container(color: Colors.transparent),
-                    ),
-                  ),
-                  // Aktivitas Target
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => _onItemTapped(2),
-                      behavior: HitTestBehavior.opaque,
-                      child: Container(color: Colors.transparent),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            ],
           ],
         ),
       ),
