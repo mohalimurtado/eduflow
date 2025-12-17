@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:typed_data';
 import '../../theme/app_colors.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -14,6 +16,44 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _emailController = TextEditingController(text: 'alimurtado@telkomuniversity.ac.id');
   final TextEditingController _phoneController = TextEditingController(text: '081234567890');
   final TextEditingController _addressController = TextEditingController(text: 'Jl. Telekomunikasi No. 1, Bandung');
+  
+  Uint8List? _selectedImageBytes;
+  String? _selectedImageName;
+
+  Future<void> _pickImage() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+      );
+      
+      if (result != null && result.files.isNotEmpty) {
+        setState(() {
+          _selectedImageBytes = result.files.first.bytes;
+          _selectedImageName = result.files.first.name;
+        });
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Foto berhasil dipilih'),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error memilih foto: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,25 +81,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.grey[200]!, width: 2),
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/user_profile.jpg'),
-                          fit: BoxFit.cover,
-                        ),
+                        image: _selectedImageBytes != null
+                            ? DecorationImage(
+                                image: MemoryImage(_selectedImageBytes!),
+                                fit: BoxFit.cover,
+                              )
+                            : const DecorationImage(
+                                image: AssetImage('assets/images/user_profile.jpg'),
+                                fit: BoxFit.cover,
+                              ),
                       ),
                     ),
                     Positioned(
                       bottom: 0,
                       right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                          color: AppColors.primary,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.camera_alt,
-                          color: Colors.white,
-                          size: 16,
+                      child: GestureDetector(
+                        onTap: _pickImage,
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: const BoxDecoration(
+                            color: AppColors.primary,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.camera_alt,
+                            color: Colors.white,
+                            size: 16,
+                          ),
                         ),
                       ),
                     ),
